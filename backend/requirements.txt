@@ -1,0 +1,14 @@
+flask==3.0.3
+flask-socketio==5.3.6
+flask-cors==4.0.1
+flask-sqlalchemy==3.1.1
+flask-migrate==4.0.7
+psycopg2-binary==2.9.9
+paho-mqtt==2.1.0
+python-dotenv==1.0.1
+scikit-learn==1.5.0
+numpy==1.26.4
+pandas==2.2.2
+joblib==1.4.2
+gevent==24.2.1
+gevent-websocket==0.10.1
