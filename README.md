@@ -54,7 +54,7 @@ The system consists of three major layers:
 
 ---
 
-## 🔵 1. Sensor Node (ESP32 DevKit V1 – 38 Pin)
+## 1. Sensor Node (ESP32 DevKit V1 – 38 Pin)
 
 ### Connected Sensors
 
@@ -78,7 +78,7 @@ The system consists of three major layers:
 
 ---
 
-## 🧠 2. AI Engine (Flask Backend)
+## 2. AI Engine (Flask Backend)
 
 Receives sensor data via MQTT and applies:
 
@@ -102,7 +102,7 @@ All processed data is stored in a database for:
 
 ---
 
-## 🔴 3. Alert Node (ESP32 – 30 Pin)
+## 3. Alert Node (ESP32 – 30 Pin)
 
 ### Connected Devices
 
@@ -119,4 +119,131 @@ All processed data is stored in a database for:
 
 ---
 
-# 🔁 Data Flow
+# Data Flow
+
+Sensors
+↓
+ESP32 (38 Pin)
+↓
+MQTT (JSON Data)
+↓
+Flask Backend AI Engine
+↓
+Database + Dashboard
+↓
+ESP32 Alert Node (30 Pin)
+↓
+LED + Buzzer + OLED
+
+
+---
+
+# AI Risk Score Model
+
+Risk Score is calculated using weighted sensor fusion:
+
+Risk Score =
+(w1 × Gas Index) +
+(w2 × CO Level) +
+(w3 × Temperature/Humidity Factor) +
+(w4 × Vibration Risk) +
+(w5 × Structural Tilt) +
+(w6 × Sound Anomaly)
+
+
+Additional AI capabilities:
+
+- Gas accumulation trend prediction  
+- Time-series forecasting  
+- Structural anomaly detection  
+- Entry denial logic based on risk threshold  
+
+---
+
+# Communication Stack
+
+- Protocol: MQTT  
+- Data Format: JSON  
+- Backend: Flask (Python)  
+- Database: MySQL / PostgreSQL  
+- Dashboard: Web-hosted interface  
+- Hardware: Dual ESP32 architecture  
+
+---
+
+# Key Features
+
+- Predictive hazard detection  
+- AI-based risk scoring  
+- Multi-sensor fusion system  
+- Distributed IoT architecture  
+- Automated evacuation alerts  
+- Worker entry control using RFID  
+- Industrial scalability  
+
+---
+
+# Sustainable Development Goals (SDG Alignment)
+
+- SDG 3 – Good Health & Well-Being  
+- SDG 8 – Decent Work & Economic Growth  
+- SDG 9 – Industry, Innovation & Infrastructure  
+- SDG 11 – Sustainable Cities & Communities  
+
+---
+
+# Hardware Requirements
+
+- 2x ESP32 Boards  
+- MQ-2, MQ-7, MQ-135 Sensors  
+- MPU6050  
+- Ultrasonic Sensor  
+- Flame Sensor  
+- RFID Module  
+- 16x2 LCD  
+- 0.96" OLED  
+- LEDs (5 Colors)  
+- Passive Buzzer  
+
+---
+
+# Software Requirements
+
+- Python 3.x  
+- Flask  
+- MQTT Broker (Mosquitto)  
+- Scikit-learn  
+- TensorFlow / Keras  
+- MySQL / PostgreSQL  
+
+---
+
+# Repository Structure
+
+
+---
+
+# Future Enhancements
+
+- Edge AI deployment on ESP32  
+- LoRa-based industrial mesh network  
+- Mobile application integration  
+- PLC integration  
+- Patent filing  
+- Industrial safety certification  
+
+---
+
+# Team
+
+Team Name: [Your Team Name]  
+Institution: [Your Institution]  
+Year: 2026  
+
+---
+
+# License
+
+This project is developed for research and industrial innovation purposes.
+
+
