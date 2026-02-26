@@ -48,7 +48,7 @@ A distributed AI-powered multi-sensor architecture that:
 
 ---
 
-# 🏗 System Architecture
+# System Architecture
 
 The system consists of three major layers:
 
