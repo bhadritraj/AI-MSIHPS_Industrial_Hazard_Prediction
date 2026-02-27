@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Smart Industrial Digital Twin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Orbitron', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, #0f2027, #0a0f1c 70%);
+    color:white;
+    min-height:100vh;
+}
+
+header {
+    padding:25px;
+    text-align:center;
+    font-size:28px;
+    letter-spacing:3px;
+    font-weight:600;
+    color:#00eaff;
+    text-shadow:0 0 20px #00eaff;
+}
+
+.grid {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    gap:25px;
+    padding:30px;
+}
+
+.card {
+    background: rgba(255,255,255,0.05);
+    border-radius:20px;
+    padding:25px;
+    backdrop-filter: blur(20px);
+    border:1px solid rgba(255,255,255,0.1);
+    box-shadow:0 0 30px rgba(0,255,255,0.1);
+    transition:0.3s;
+}
+
+.card:hover {
+    transform:translateY(-5px);
+    box-shadow:0 0 40px rgba(0,255,255,0.3);
+}
+
+.zone-title {
+    font-size:18px;
+    margin-bottom:20px;
+    color:#00ffcc;
+}
+
+.progress-group {
+    margin-bottom:18px;
+}
+
+.label {
+    font-size:12px;
+    margin-bottom:6px;
+    opacity:0.8;
+}
+
+.bar {
+    width:100%;
+    height:14px;
+    background:#1c1f2b;
+    border-radius:50px;
+    overflow:hidden;
+}
+
+.fill {
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg,#00fff2,#0088ff);
+    transition:0.6s ease;
+    box-shadow:0 0 10px #00fff2;
+}
+
+.risk-panel {
+    text-align:center;
+    padding:40px;
+}
+
+.risk-score {
+    font-size:60px;
+    margin-top:20px;
+}
+
+.status-text {
+    margin-top:10px;
+    font-size:18px;
+}
+
+.safe { color:#00ff88; }
+.warning { color:#ffaa00; }
+.critical { color:#ff0044; }
+
+footer {
+    text-align:center;
+    padding:15px;
+    opacity:0.4;
+    font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>SMART INDUSTRIAL DIGITAL TWIN</header>
+
+<div class="grid">
+
+<!-- GAS ZONE -->
+<div class="card">
+<div class="zone-title">🔥 GAS & FIRE ZONE</div>
+
+<div class="progress-group">
+<div class="label">MQ2 Gas</div>
+<div class="bar"><div id="mq2" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">MQ135 Air Quality</div>
+<div class="bar"><div id="mq135" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">MQ7 CO Gas</div>
+<div class="bar"><div id="mq7" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">Flame Detection</div>
+<div class="bar"><div id="flame" class="fill"></div></div>
+</div>
+
+</div>
+
+<!-- ENVIRONMENT ZONE -->
+<div class="card">
+<div class="zone-title">🌡 ENVIRONMENT ZONE</div>
+
+<div class="progress-group">
+<div class="label">Temperature</div>
+<div class="bar"><div id="temp" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">Humidity</div>
+<div class="bar"><div id="hum" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">Sound Level</div>
+<div class="bar"><div id="sound" class="fill"></div></div>
+</div>
+
+</div>
+
+<!-- STRUCTURAL ZONE -->
+<div class="card">
+<div class="zone-title">🏗 STRUCTURAL ZONE</div>
+
+<div class="progress-group">
+<div class="label">Tilt</div>
+<div class="bar"><div id="tilt" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">Vibration</div>
+<div class="bar"><div id="vibration" class="fill"></div></div>
+</div>
+
+<div class="progress-group">
+<div class="label">Liquid Level</div>
+<div class="bar"><div id="liquid" class="fill"></div></div>
+</div>
+
+</div>
+
+<!-- AI PANEL -->
+<div class="card risk-panel">
+<div class="zone-title">🧠 AI RISK ENGINE</div>
+<div id="riskScore" class="risk-score">0</div>
+<div id="riskStatus" class="status-text safe">SAFE</div>
+</div>
+
+</div>
+
+<footer>Live ESP32 Monitoring • AI Risk Prediction • Real-Time Industrial Twin</footer>
+
+<script>
+
+function setBar(id,value,max){
+    let percent = Math.min((value/max)*100,100);
+    document.getElementById(id).style.width = percent + "%";
+}
+
+function calculateRisk(data){
+    let score = 0;
+
+    if(data.temperature > 60) score += 2;
+    if(data.mq2 > 700) score += 2;
+    if(data.mq135 > 700) score += 2;
+    if(data.mq7 > 600) score += 1;
+    if(data.flame == 1) score += 5;
+    if(data.vibration > 60) score += 1;
+    if(data.tilt > 20) score += 1;
+
+    return score;
+}
+
+async function fetchData(){
+    try{
+        const res = await fetch('/latest');
+        const data = await res.json();
+        if(!data.mq2) return;
+
+        setBar("mq2",data.mq2,1000);
+        setBar("mq135",data.mq135,1000);
+        setBar("mq7",data.mq7,1000);
+        setBar("flame",data.flame?100:0,100);
+        setBar("temp",data.temperature,100);
+        setBar("hum",data.humidity,100);
+        setBar("sound",data.sound,120);
+        setBar("tilt",data.tilt,45);
+        setBar("vibration",data.vibration,100);
+        setBar("liquid",data.liquid,50);
+
+        let risk = calculateRisk(data);
+
+        let scoreElement = document.getElementById("riskScore");
+        let statusElement = document.getElementById("riskStatus");
+
+        scoreElement.innerText = risk;
+
+        if(risk <= 2){
+            statusElement.innerText="SAFE";
+            statusElement.className="status-text safe";
+        }
+        else if(risk <=5){
+            statusElement.innerText="WARNING";
+            statusElement.className="status-text warning";
+        }
+        else{
+            statusElement.innerText="CRITICAL";
+            statusElement.className="status-text critical";
+        }
+
+    }catch(e){
+        console.log("Waiting for data...");
+    }
+}
+
+setInterval(fetchData,2000);
+
+</script>
+
+</body>
+</html>
